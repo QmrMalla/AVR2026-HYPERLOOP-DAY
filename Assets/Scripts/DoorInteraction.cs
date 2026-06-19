@@ -5,33 +5,67 @@ public class DoorInteraction : MonoBehaviour
 {
     [Header("Settings")]
     public bool isPressurized = false;
-    
+    public float pressureValue = 0f;
+    private bool isPressurizing = false;
+
     [Header("UI")]
     public GameObject warningPanel;
     public TextMeshProUGUI warningText;
-
-    private bool playerNearDoor = false;
+    public TextMeshProUGUI pressureText;
 
     void Start()
     {
-        // اخفي لوحة التحذير في البداية
         if (warningPanel != null)
             warningPanel.SetActive(false);
+
+        UpdatePressureDisplay();
     }
 
-    // يُستدعى عند محاولة فتح الباب
+    void Update()
+    {
+        if (isPressurizing)
+        {
+            pressureValue += Time.deltaTime * 0.5f; // dauert ca. 2 Sekunden
+
+            if (pressureValue >= 1f)
+            {
+                pressureValue = 1f;
+                isPressurizing = false;
+                isPressurized = true;
+                ShowWarning("Druckausgleich abgeschlossen!\nTür kann jetzt geöffnet werden.");
+            }
+
+            UpdatePressureDisplay();
+        }
+    }
+
+    // Button 1: Tür öffnen versuchen
     public void TryOpenDoor()
     {
         if (!isPressurized)
         {
-            // الباب لا يفتح — يظهر تحذير
-            ShowWarning("⚠️ Druckausgleich erforderlich!\nVakuum aktiv – Tür gesperrt.");
+            ShowWarning("Druckausgleich erforderlich!\nVakuum aktiv – Tür gesperrt.");
         }
         else
         {
-            // الباب يفتح
             OpenDoor();
         }
+    }
+
+    // Button 2: Druckausgleich starten
+    public void StartPressureEqualization()
+    {
+        if (!isPressurized && !isPressurizing)
+        {
+            isPressurizing = true;
+            ShowWarning("Druckausgleich läuft...");
+        }
+    }
+
+    void UpdatePressureDisplay()
+    {
+        if (pressureText != null)
+            pressureText.text = "Druck: " + (pressureValue * 1f).ToString("F1") + " bar";
     }
 
     void ShowWarning(string message)
@@ -41,8 +75,8 @@ public class DoorInteraction : MonoBehaviour
             warningPanel.SetActive(true);
             if (warningText != null)
                 warningText.text = message;
-            
-            // اخفي التحذير بعد 3 ثواني
+
+            CancelInvoke("HideWarning");
             Invoke("HideWarning", 3f);
         }
     }
@@ -56,6 +90,7 @@ public class DoorInteraction : MonoBehaviour
     void OpenDoor()
     {
         Debug.Log("Tür öffnet sich!");
-        // هنا نضيف Animation لاحقاً
+        ShowWarning("Tür öffnet sich!");
+        // Hier später: Animation
     }
 }
