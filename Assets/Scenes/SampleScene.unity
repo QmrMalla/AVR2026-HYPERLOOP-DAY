@@ -1991,6 +1991,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPressurized: 0
   pressureValue: 0
+  pressureSpeed: 0.5
+  doorLeaf: {fileID: 938824685}
+  openDistance: 1.71
+  doorSpeed: 1.5
+  holdingButton1: 0
+  holdingButton2: 0
   warningPanel: {fileID: 299798239}
   warningText: {fileID: 418168908}
   pressureText: {fileID: 789660365}
@@ -10058,6 +10064,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2966952782214108523, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.71
+      objectReference: {fileID: 0}
     - target: {fileID: 3112082463319905011, guid: 367af9ad47d23d345b912809cee10524, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -10114,6 +10124,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoTubePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424395229672760953, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10122,6 +10160,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 159731175}
   m_SourcePrefab: {fileID: 100100000, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+--- !u!4 &938824685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2966952782214108523, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+  m_PrefabInstance: {fileID: 938824684}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &941061978
 GameObject:
   m_ObjectHideFlags: 0
