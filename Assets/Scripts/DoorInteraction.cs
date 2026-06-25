@@ -2,7 +2,7 @@
 using TMPro;
 
 /// <summary>
-/// goTube-Gate: Druckausgleich (Vakuum) + Totmann-Prinzip + vertikales Schiebetor.
+/// goTube-Gate: Druckausgleich (Vakuum) + Totmann-Prinzip + vertikales Schiebetor + Manometer.
 /// Das Gate GLEITET nach oben (Seilzug/Winde), Sicherung mit Bolzen von unten.
 /// Kern-Interaktionen des Szenarios "Oeffnen des goTube-Gates" (AVR2026-HYPERLOOP-DAY).
 /// </summary>
@@ -16,21 +16,24 @@ public class DoorInteraction : MonoBehaviour
 
     [Header("Tuer-Animation (Schiebetor - vertikal)")]
     public Transform doorLeaf;              // TubeGate1 (das blaue Gate)
-    public float openDistance = 2f;         // wie weit es nach OBEN gleitet (am Asset pruefen)
+    public float openDistance = 1.71f;      // wie weit es nach OBEN gleitet
     public float doorSpeed = 1.5f;          // Meter pro Sekunde
     private Vector3 closedPos;
     private bool doorIsOpen = false;
-    // Gleitet entlang der lokalen Y-Achse nach oben. Bei geneigter Fuehrung:
-    // doorLeaf unter ein passend gedrehtes Empty haengen und dieses als Referenz nutzen.
 
     [Header("Totmann (zwei Taster)")]
-    public bool holdingButton1 = false;     // von Taster A gesetzt (Press = true / Release = false)
+    public bool holdingButton1 = false;     // von Taster A gesetzt
     public bool holdingButton2 = false;     // von Taster B gesetzt
 
     [Header("UI")]
     public GameObject warningPanel;
     public TextMeshProUGUI warningText;
     public TextMeshProUGUI pressureText;
+
+    [Header("Manometer")]
+    public Transform needlePivot;           // NeedlePivot (Drehpunkt des Zeigers)
+    public float needleAngleAt0 = 90f;      // Zeigerwinkel bei 0 bar
+    public float needleAngleAt1 = -90f;     // Zeigerwinkel bei 1 bar
 
     void Start()
     {
@@ -56,7 +59,6 @@ public class DoorInteraction : MonoBehaviour
         }
 
         // 2) Totmann-Prinzip: Tor gleitet NUR, solange BEIDE Taster gehalten werden.
-        //    Wird ein Taster losgelassen, stoppt die Bewegung (Haende ausserhalb des Bewegungsbereichs).
         bool deadmanActive = isPressurized && !doorIsOpen && holdingButton1 && holdingButton2;
         if (deadmanActive && doorLeaf != null)
         {
@@ -68,6 +70,13 @@ public class DoorInteraction : MonoBehaviour
                 doorIsOpen = true;
                 ShowWarning("Tor ist oben.\nMit Sicherungsbolzen von unten sichern.");
             }
+        }
+
+        // 3) Manometer-Zeiger immer aktualisieren (jeden Frame)
+        if (needlePivot != null)
+        {
+            float angle = Mathf.Lerp(needleAngleAt0, needleAngleAt1, pressureValue);
+            needlePivot.localEulerAngles = new Vector3(0, 0, angle);
         }
     }
 
@@ -88,7 +97,16 @@ public class DoorInteraction : MonoBehaviour
             ShowWarning("Druckausgleich erforderlich!\nVakuum aktiv - Tor gesperrt.");
     }
 
-    // Von den zwei Totmann-Tastern (z. B. ueber Poke-Interaction, Press/Release-Events).
+    /// <summary>NOT-AUS: stoppt alles sofort (Sicherheit).</summary>
+    public void EmergencyStop()
+    {
+        isPressurizing = false;
+        holdingButton1 = false;
+        holdingButton2 = false;
+        ShowWarning("NOT-AUS aktiviert!\nVorgang gestoppt.");
+    }
+
+    // Von den zwei Totmann-Tastern (Press/Release-Events).
     public void SetButton1(bool held) { holdingButton1 = held; }
     public void SetButton2(bool held) { holdingButton2 = held; }
 
