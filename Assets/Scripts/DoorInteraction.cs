@@ -35,6 +35,18 @@ public class DoorInteraction : MonoBehaviour
     public float needleAngleAt0 = 90f;      // Zeigerwinkel bei 0 bar
     public float needleAngleAt1 = -90f;     // Zeigerwinkel bei 1 bar
 
+    [Header("Auto-Drehung zum Tor")]
+public Transform playerRig;          // [BuildingBlock] Camera Rig
+public float turnToAngle = 70f;      // Zielwinkel (nach rechts), am Setup anpassen
+public float turnSpeed = 10f;        // Grad pro Sekunde
+private bool shouldTurn = false;
+
+[Header("Auto-Zoom zur ElectricBox")]
+public float moveForwardDistance = 1.5f;   // كم تتقرّب (متر) - صغيرة
+public float moveSpeed = 1f;                // سرعة التحرّك
+private Vector3 targetPosition;
+private bool shouldMove = false;
+
     void Start()
     {
         if (warningPanel != null) warningPanel.SetActive(false);
@@ -54,6 +66,11 @@ public class DoorInteraction : MonoBehaviour
                 isPressurizing = false;
                 isPressurized = true;
                 ShowWarning("Druckausgleich abgeschlossen!\nTor kann jetzt geoeffnet werden.");
+                shouldTurn = true;  
+                shouldMove = true;
+if (playerRig != null)
+    targetPosition = playerRig.localPosition + playerRig.right * moveForwardDistance;
+    // playerRig.right = اتجاه اليمين (نحو الباب). لو الاتجاه غلط، نجرّب forward أو -right
             }
             UpdatePressureDisplay();
         }
@@ -78,8 +95,23 @@ public class DoorInteraction : MonoBehaviour
             float angle = Mathf.Lerp(needleAngleAt0, needleAngleAt1, pressureValue);
             needlePivot.localEulerAngles = new Vector3(0, 0, angle);
         }
-    }
+        if (shouldTurn && playerRig != null)
+{
+    float currentY = playerRig.localEulerAngles.y;
+    float newY = Mathf.MoveTowardsAngle(currentY, turnToAngle, turnSpeed * Time.deltaTime);
+    playerRig.localEulerAngles = new Vector3(0, newY, 0);
+    if (Mathf.Abs(Mathf.DeltaAngle(newY, turnToAngle)) < 0.5f)
+        shouldTurn = false;   // وصل، نوقف
+}
+ if (shouldMove && playerRig != null)
+{
+    playerRig.localPosition = Vector3.MoveTowards(playerRig.localPosition, targetPosition, moveSpeed * Time.deltaTime);
+    if (Vector3.Distance(playerRig.localPosition, targetPosition) < 0.01f)
+        shouldMove = false;
+}
 
+    }
+   
     /// <summary>Vom Druckausgleich-Taster (Ventil) aufgerufen.</summary>
     public void StartPressureEqualization()
     {

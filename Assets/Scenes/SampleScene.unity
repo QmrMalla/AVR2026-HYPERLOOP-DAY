@@ -2708,6 +2708,11 @@ MonoBehaviour:
   needlePivot: {fileID: 109445613}
   needleAngleAt0: 90
   needleAngleAt1: -90
+  playerRig: {fileID: 1406285443}
+  turnToAngle: 55.5
+  turnSpeed: 10
+  moveForwardDistance: 2.36
+  moveSpeed: 1
 --- !u!1 &167032736
 GameObject:
   m_ObjectHideFlags: 0
@@ -12183,6 +12188,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 101512770932300766, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 101512770932300766, guid: 367af9ad47d23d345b912809cee10524, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.84
+      objectReference: {fileID: 0}
     - target: {fileID: 2966952782214108523, guid: 367af9ad47d23d345b912809cee10524, type: 3}
       propertyPath: m_LocalPosition.y
       value: -1.71
@@ -17362,15 +17375,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406285438}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.39, y: 2.64, z: 13.53}
+  m_LocalRotation: {x: 0, y: 0.016405387, z: 0, w: 0.9998655}
+  m_LocalPosition: {x: 6.98, y: 2.6, z: 29.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1475492977}
   - {fileID: 150457079}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 1.88, z: -0}
 --- !u!1 &1408332449
 GameObject:
   m_ObjectHideFlags: 0
