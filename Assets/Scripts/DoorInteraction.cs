@@ -117,20 +117,16 @@ public class DoorInteraction : MonoBehaviour
             float newY = Mathf.MoveTowardsAngle(currentY, turnToAngle, turnSpeed * Time.deltaTime);
             playerRig.localEulerAngles = new Vector3(0, newY, 0);
             if (Mathf.Abs(Mathf.DeltaAngle(newY, turnToAngle)) < 0.5f)
-            {
                 shouldTurn = false;
-                ShowWarning("Stellen Sie sicher, dass der Bewegungsbereich frei ist.\nKeine Personen im Gefahrenbereich!\nDann beide Taster gleichzeitig druecken.");
-                PlayInstruction(clipTasterDruecken);
-            }
         }
 
         // 5) Auto-Zoom (leichtes Vorwaerts-Bewegen)
-        if (shouldMove && playerRig != null)
+       /* if (shouldMove && playerRig != null)
         {
             playerRig.localPosition = Vector3.MoveTowards(playerRig.localPosition, targetPosition, moveSpeed * Time.deltaTime);
             if (Vector3.Distance(playerRig.localPosition, targetPosition) < 0.01f)
                 shouldMove = false;
-        }
+        }*/
     }
 
     /// <summary>Spielt eine Audio-Anweisung ab und sperrt solange alle Eingaben.</summary>
@@ -202,7 +198,7 @@ public class DoorInteraction : MonoBehaviour
             warningPanel.SetActive(true);
             if (warningText != null) warningText.text = message;
             CancelInvoke(nameof(HideWarning));
-            Invoke(nameof(HideWarning), 5f);   // 5 Sekunden anzeigen (mehr Lesezeit)
+            Invoke(nameof(HideWarning), 5f);
         }
     }
 
