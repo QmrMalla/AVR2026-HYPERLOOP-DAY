@@ -121,12 +121,12 @@ public class DoorInteraction : MonoBehaviour
         }
 
         // 5) Auto-Zoom (leichtes Vorwaerts-Bewegen)
-       /* if (shouldMove && playerRig != null)
+        if (shouldMove && playerRig != null)
         {
             playerRig.localPosition = Vector3.MoveTowards(playerRig.localPosition, targetPosition, moveSpeed * Time.deltaTime);
             if (Vector3.Distance(playerRig.localPosition, targetPosition) < 0.01f)
                 shouldMove = false;
-        }*/
+        }
     }
 
     /// <summary>Spielt eine Audio-Anweisung ab und sperrt solange alle Eingaben.</summary>
@@ -145,9 +145,7 @@ public class DoorInteraction : MonoBehaviour
     void StartTurnAndMove()
     {
         shouldTurn = true;
-        shouldMove = true;
-        if (playerRig != null)
-            targetPosition = playerRig.localPosition + playerRig.right * moveForwardDistance;
+        shouldMove = false;   // KEIN Zoom/Vorwaerts-Bewegen mehr - nur Drehung nach rechts
     }
 
     /// <summary>Vom Druckausgleich-Taster (Ventil) aufgerufen.</summary>
@@ -182,8 +180,38 @@ public class DoorInteraction : MonoBehaviour
     }
 
     // Von den zwei Totmann-Tastern (Press/Release). Waehrend Audio gesperrt.
-    public void SetButton1(bool held) { if (!inputLocked) holdingButton1 = held; }
-    public void SetButton2(bool held) { if (!inputLocked) holdingButton2 = held; }
+    public void SetButton1(bool held)
+    {
+        if (inputLocked) return;
+        holdingButton1 = held;
+        ShowButtonFeedback();
+    }
+
+    public void SetButton2(bool held)
+    {
+        if (inputLocked) return;
+        holdingButton2 = held;
+        ShowButtonFeedback();
+    }
+
+    /// <summary>Zeigt dem Nutzer, welche Taster gerade gedrueckt sind (visuelles Feedback).</summary>
+    void ShowButtonFeedback()
+    {
+        // Wenn Druckausgleich noch fehlt: Hinweis geben
+        if (!isPressurized)
+        {
+            ShowWarning("Zuerst Druckausgleich durchfuehren!\nDann beide Taster gleichzeitig druecken.");
+            return;
+        }
+
+        string s1 = holdingButton1 ? "GEDRUECKT" : "frei";
+        string s2 = holdingButton2 ? "GEDRUECKT" : "frei";
+
+        if (holdingButton1 && holdingButton2)
+            ShowWarning("Beide Taster gedrueckt!\nTor oeffnet sich...");
+        else
+            ShowWarning("Taster 1: " + s1 + "   |   Taster 2: " + s2 + "\nBitte BEIDE gleichzeitig halten.");
+    }
 
     void UpdatePressureDisplay()
     {
